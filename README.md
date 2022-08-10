@@ -31,8 +31,35 @@ unxz fedora-coreos-36.20220716.3.1-qemu.x86_64.qcow2.xz
 
 Ignition files are a way to configure a CoreOS machine at boot time.
 
+We are going to create a simple ignition file that add your public SSH key to
+the machine so you can SSH to it after the installation.
+
+Edit `fcos-config.fcc` and put your public SSH key in it. Then we are going to
+generate the ignition file from that yaml.
+
 ```
 podman run -i --rm quay.io/coreos/fcct -p -s <fcos-config.fcc > fcos-config.ign
+```
+
+And make sure it was created correctly by inspecting `fcos-config.ign`.
+
+### Configuring SELinux
+
+We are goign to use `virt` in order to install the VM, therefore, we need to
+add a SELinux rule to allow `virt` to read the ignition file.
+
+If you don't want to add any SELInux rule you can temporarly disable it.
+
+* Check SELinux status: `getenforce`
+* Disable SELinux: `setenforce 0` (status should become `permissive`)
+* Enable SELinux: `setenforce 1` (status should become `enforcing`)
+
+For Adding the relevant rule, we need to
+
+### Install the virtual machine
+
+```
+./create-vm
 ```
 
 # Links

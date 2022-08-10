@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# Allow SElinux to read the ignition file
-# TODO: add the rule
