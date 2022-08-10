@@ -62,6 +62,48 @@ For Adding the relevant rule, we need to
 ./create-vm
 ```
 
+### SSH to the machine
+
+Use `virsh net-dhcp-leases default` in order to get the VM IP and then we can SSH to it.
+
+```
+ssh core@<ip>
+```
+
+### Rebooting from the container
+
+From inside the VM we will use the `rpm-ostree rebase` command in order to
+reboot from a spacific container image.
+
+```
+rpm-ostree rebase --experimental ostree-unverified-registry:quay.io/ybettan/coreos-layering:golang-binary --bypass-driver
+```
+
+### SSH to the new CoreOS image
+
+Once the VM has booted, we can SSH to it again and validate that we indeed have
+the "new layer" of the image.
+
+Check the [Dockerfile](container-image/Dockerfile) to understand better what we
+are expecting to see in the new VM image.
+
+We can see that the hello-world binary is present.
+
+```
+[core@localhost ~]$ hello-world
+Hello, world!
+```
+
+Also, the systemd service is loaded.
+
+```
+[core@localhost ~]$ systemctl status hello-world
+○ hello-world.service - A hello world unit!
+     Loaded: loaded (/etc/systemd/system/hello-world.service; disabled; vendor preset: disabled)
+     Active: inactive (dead)
+```
+
+
 # Links
 * https://github.com/coreos/coreos-layering-examples
 * https://github.com/coreos/coreos-layering-examples
