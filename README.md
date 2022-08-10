@@ -1,1 +1,1 @@
-# ostree-layering-driver-toolkit
+# coreos-layering-driver-toolkit
