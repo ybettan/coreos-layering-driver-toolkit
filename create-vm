@@ -1,0 +1,22 @@
+#!/bin/bash
+
+REPO_PATH=/home/ybettan/go/src/github.com/ostree-tmp
+export BASE_IMAGE_PATH=${REPO_PATH}
+export BASE_IMAGE_NAME=fedora-coreos-36.20220716.3.1-qemu.x86_64.qcow2
+export IGNITION_PATH=${REPO_PATH}
+export IGNITION_FILE=fcos-config.ign
+#Create the VM with virt-install
+virt-install \
+    --connect qemu:///system \
+    --name=fcos \
+    --ram=2048 \
+    --cpuset=0 \
+    --vcpus=2 \
+    --os-type=linux \
+    --os-variant=fedora30 \
+    --graphics=none \
+    --import \
+    --disk size=10,readonly=false,backing_store=${BASE_IMAGE_PATH}/${BASE_IMAGE_NAME},serial=WD-WMAP9A966149 \
+    --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=${IGNITION_PATH}/${IGNITION_FILE}" \
+    &
+
