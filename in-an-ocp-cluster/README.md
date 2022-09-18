@@ -56,8 +56,11 @@ downgrade are supposed to work.
 
 ```
 cd in-an-ocp-cluster/container-image/
-#FIXME: add the kernel version as a build-arg
-podman build -t quay.io/ybettan/coreos-layering:simple-kmod .
+podman build \
+    --build-arg KERNEL_VERSION=<kernel version> \
+    --build-arg DTK_IMAGE=<DTK image> \
+    --build-arg RHEL_COREOS_8_IMAGE=<rhel-coreos-8 image> \
+    -t quay.io/ybettan/coreos-layering:simple-kmod .
 podman push quay.io/ybettan/coreos-layering:simple-kmod
 ```
 
