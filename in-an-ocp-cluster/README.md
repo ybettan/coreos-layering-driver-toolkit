@@ -69,15 +69,12 @@ apply it.
 oc apply -f in-an-ocp-cluster/machineconfig.yaml
 ```
 
-FIXME: remove all of that?
-Get the host binaries by running `oc debug node/<node name>` followed by
-`chroot /host`.
+### Validate that the kernel module was loaded
 
-From inside the node we will use the `rpm-ostree rebase` command in order to
-reboot from our pre-build container image.
+Get into the node using `oc debug node/<node name>` followed by `chroot /host`
+to get the host binaries.
 
+Then check if the `simple_kmod` kernel module was loaded.
 ```
-rpm-ostree rebase --experimental ostree-unverified-registry:quay.io/ybettan/coreos-layering:simple-kmod
+lsmod | grep simple_kmod
 ```
-
-You may need to also run `systemctl reboot` in order for the reboot to take action.
