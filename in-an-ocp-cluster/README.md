@@ -1,5 +1,9 @@
 # The Fedora-CoreOS host is a node in an OCP cluster
 
+### Full demo
+
+[![asciicast](https://asciinema.org/a/522655.svg)](https://asciinema.org/a/522655)
+
 ### Prerequisits
 
 This will only work with a later version of RHCOS, currently only working with
