@@ -19,7 +19,7 @@ FROM ${RHEL_COREOS_8_IMAGE}
 ARG KERNEL_VERSION
 
 COPY --from=builder /etc/driver-toolkit-release.json /etc/
-COPY --from=builder /lib/modules/${KERNEL_VERSION}/ /usr/lib/modules/${KERNEL_VERSION}/
+COPY --from=builder /lib/modules/${KERNEL_VERSION}/*.ko /usr/lib/modules/${KERNEL_VERSION}/
 
 # This is needed in order to autoload the module at boot time.
-RUN echo simple_kmod > /etc/modules-load.d/simple_kmod.conf
+RUN depmod && echo simple_kmod > /etc/modules-load.d/simple_kmod.conf
