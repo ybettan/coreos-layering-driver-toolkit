@@ -56,6 +56,19 @@ oc adm release info registry.ci.openshift.org/ocp/release:<cluster version> --im
 Once the issue is resolved, in theory, even images versions that creates packages
 downgrade are supposed to work.
 
+### Get the correct kernel-version
+
+We also need the correct kernel version in order to build the driver-container.
+
+Since after reboot, the kernel of the host will be the kernel RPM installed on
+the new image, aka, the rhel-coreos-8 image that we are using as the last
+layer, then the correct way to get the kernel version is by getting it from the
+image itself.
+
+```
+podman run -it <rhel-coreos-8 image> rpm -qa | grep kernel
+```
+
 ### Build the container image
 
 ```
