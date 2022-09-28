@@ -22,4 +22,4 @@ COPY --from=builder /etc/driver-toolkit-release.json /etc/
 COPY --from=builder /lib/modules/${KERNEL_VERSION}/*.ko /usr/lib/modules/${KERNEL_VERSION}/
 
 # This is needed in order to autoload the module at boot time.
-RUN depmod && echo simple_kmod > /etc/modules-load.d/simple_kmod.conf
+RUN depmod -a "${KERNEL_VERSION}" && echo simple_kmod > /etc/modules-load.d/simple_kmod.conf
