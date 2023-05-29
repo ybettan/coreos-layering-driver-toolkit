@@ -13,3 +13,4 @@ created container image.
 ### Table of content
 * [The host is a simple VM running Fedora-CoreOS](./in-a-standalone-fedora-coreos-host)
 * [The host is a node in an OCP cluster](./in-an-ocp-cluster)
+* [Full blog](./blog)
