@@ -1,20 +1,20 @@
 # CoreOS Layering
 
 In this blog we are going to explore the coreos-layering technology in order to
-inject kernel-modules to an Openshift node.
+inject kernel-modules to an OpenShift node.
 
 We will use the [driver-toolkit](https://github.com/openshift/driver-toolkit)
 as a base image in order to build the [simple-kmod](https://github.com/openshift-psap/simple-kmod)
 kernel module and then add the `.ko` to a new layer on top of the RHEL-CoreOS
 image that runs on the node.
 
-### Different Methods Of Injecting Kernel Modules To A Cluster
+### Different methods of injecting kernel modules to a cluster
 
 * Day 0: Creating a custom RHCOS image for deployment including the kernel module
-* Day 1: Using MCO with a layered image (what we are showing in this blog)
-* Day 2: Using the kernel-module-management operator
+* Day 2 MCO: Using the Machine Config Operator with a layered image (what we are showing in this blog)
+* Day 2 KMM: Using the Kernel Module Management Operator
 
-Note:  Future recommendations are subject to change as enhancements and features
+Note: Future recommendations are subject to change as enhancements and features
 are added.
 
 ### Backgroud - Customizable RHEL CoreOS
@@ -39,7 +39,7 @@ This layering does not modify the base image, and it creates a custom layered
 image that includes all base functionality and add-ons to specific nodes in the
 cluster.
 
-### Red Hat Support For Third Party Components
+### Red Hat support for third party components
 
 ![image](https://github.com/ybettan/coreos-layering-driver-toolkit/assets/29724509/b5d494bc-f6c6-41d0-96a7-638fb23e275c)
 
@@ -50,7 +50,7 @@ for using third party components such as kernel modules.
 
 * OCP 4.12 (tech preview) or later (4.13 is GA).
 
-### Get The Correct driver-toolkit Image
+### Get the correct driver-toolkit image
 
 The driver-toolkit contains the kernel package and headers in order to build
 kernel modules for a specific kernel, therefore, we need to make sure we use
@@ -68,7 +68,7 @@ $ oc adm release info quay.io/openshift-release-dev/ocp-release:<cluste version>
 $ oc adm release info quay.io/openshift-release-dev/ocp-release:<cluster version>-aarch64 --image-for=driver-toolkit
 ```
 
-### Get The Correct rhel-coreos-8 Image
+### Get the correct rhel-coreos-8 image
 
 We want to make sure we are using the same image that runs on the nodes to be
 used as the base image of our driver-container image for minimal side effects.
@@ -85,7 +85,7 @@ $ oc adm release info quay.io/openshift-release-dev/ocp-release:4.12.18-x86_64 -
 quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:127670aaa6073e97bd6d919e1b57bd16b60435410b096aeefce7cd64f6c83d24
 ```
 
-### Get The Correct kernel-version
+### Get the correct kernel-version
 
 We also need the correct kernel version in order to build the driver-container.
 
@@ -106,7 +106,7 @@ If you don't have access to the image, make sure you are using your [pull-secret
 
 We can see the kernel RPM in the image is `4.18.0-372.53.1.el8_6.x86_64`.
 
-### Build The Container Image
+### Build the container image
 
 We are going to use the following Dockerfile
 ```
@@ -196,7 +196,6 @@ depmod -F /lib/modules/4.18.0-372.53.1.el8_6.x86_64/System.map 4.18.0-372.53.1.e
 --> 612c8c8a54f
 Successfully tagged quay.io/ybettan/coreos-layering:simple-kmod
 612c8c8a54f0800cf8dcb4c20d5d3d384dc47463711d6d3ad1bd93d52e982b1e
-
 ```
 
 Now, let's push the image to some image registry in order for the image to be accesible
@@ -212,9 +211,9 @@ $ oc get secret/pull-secret -n openshift-config.
 ```
 For more info, check the [how to update the global pull-secret](https://docs.openshift.com/container-platform/4.12/openshift_images/managing_images/using-image-pull-secrets.html#images-update-global-pull-secret_using-image-pull-secrets) doc.
 
-### Loading The Kernel Module Into The Nodes
+### Loading the kernel module into the nodes
 
-First, we will need to create a `MachineConfig` file
+First, we will need to create a `MachineConfig` file.
 ```
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfig
